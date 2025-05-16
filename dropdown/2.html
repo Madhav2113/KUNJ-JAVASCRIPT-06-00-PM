@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PRODUCT FILTER</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      /* background: linear-gradient(135deg, #3a3a3a 0%, #000000 100%) */;
+      background-image: linear-gradient(to top, #dbdcd7 0%, #dddcd7 24%, #e2c9cc 30%, #e7627d 46%, #b8235a 59%, #801357 71%, #3d1635 84%, #1c1a27 100%);
+      padding: 20px;
+      color: #333;
+    }
+
+
+    .header {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .header h3 {
+      font-size: 32px;
+      color: #222;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+      text-shadow: 1px 1px 2px #ccc;
+    }
+
+    #selectItem {
+      padding: 12px 16px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      background: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #selectItem:hover {
+      background: #f0f0f0;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .product-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: 200px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+
+    .product-card h1 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #444;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="AA" style="padding-bottom: 30px;">
+    <select id="selectItem">
+      <option value="all">All</option>
+      <option value="mens">Men's Clothing</option>
+      <option value="women">Women's Clothing</option>
+      <option value="jewelery">Jewelery</option>
+      <option value="electronics">Electronics</option>
+    </select>
+
+   
+  </div>
+
+  <div class="content">
+    <div class="main"></div>
+  </div>
+
+  <script>
+    let selectItem = document.getElementById("selectItem");
+    let main = document.querySelector(".main");
+    all();
+
+    selectItem.addEventListener("change", function () {
+      main.innerHTML = "";
+      let select = selectItem.value;
+      switch (select) {
+        case "all":
+          all();
+          break;
+        case "mens":
+          mens();
+          break;
+        case "women":
+          women();
+          break;
+        case "electronics":
+          electronics();
+          break;
+        case "jewelery":
+          jewelery();
+          break;
+        default:
+          mens();
+          break;
+      }
+    });
+
+    function all() {
+      fetch("https://fakestoreapi.com/products")
+        .then((req) => req.json())
+        .then((res) => {
+          res.forEach((element) => {
+            let card = document.createElement("div");
+            card.className = "product-card";
+
+            let img = document.createElement("img");
+            img.setAttribute("src", element.image);
+
+            let title = document.createElement("h1");
+            title.innerText = element.title;
+
+            let price = document.createElement("h1");
+            price.innerText = `₹${element.price}`;
+
+           
+            card.appendChild(img);
+            card.appendChild(title);
+            card.appendChild(price);
+            main.appendChild(card);
+          });
+        });
+    }
+
+    function mens() {
+      fetch("https://fakestoreapi.com/products")
+        .then((req) => req.json())
+        .then((res) => {
+          let x = res.filter((e) => e.category == "men's clothing");
+          x.forEach((element) => {
+            let card = document.createElement("div");
+            card.className = "product-card";
+
+            let img = document.createElement("img");
+            img.setAttribute("src", element.image);
+
+            let title = document.createElement("h1");
+            title.innerText = element.title;
+
+            card.appendChild(img);
+            card.appendChild(title);
+            main.appendChild(card);
+          });
+        });
+    }
+
+    function women() {
+      fetch("https://fakestoreapi.com/products")
+        .then((req) => req.json())
+        .then((res) => {
+          let x = res.filter((e) => e.category == "women's clothing");
+          x.forEach((element) => {
+            let card = document.createElement("div");
+            card.className = "product-card";
+
+            let img = document.createElement("img");
+            img.setAttribute("src", element.image);
+
+            let title = document.createElement("h1");
+            title.innerText = element.title;
+
+            card.appendChild(img);
+            card.appendChild(title);
+            main.appendChild(card);
+          });
+        });
+    }
+
+    function jewelery() {
+      fetch("https://fakestoreapi.com/products")
+        .then((req) => req.json())
+        .then((res) => {
+          let x = res.filter((e) => e.category == "jewelery");
+          x.forEach((element) => {
+            let card = document.createElement("div");
+            card.className = "product-card";
+
+            let img = document.createElement("img");
+            img.setAttribute("src", element.image);
+
+            let title = document.createElement("h1");
+            title.innerText = element.title;
+
+            card.appendChild(img);
+            card.appendChild(title);
+            main.appendChild(card);
+          });
+        });
+    }
+
+    function electronics() {
+      fetch("https://fakestoreapi.com/products")
+        .then((req) => req.json())
+        .then((res) => {
+          let x = res.filter((e) => e.category == "electronics");
+          x.forEach((element) => {
+            let card = document.createElement("div");
+            card.className = "product-card";
+
+            let img = document.createElement("img");
+            img.setAttribute("src", element.image);
+
+            let title = document.createElement("h1");
+            title.innerText = element.title;
+
+            card.appendChild(img);
+            card.appendChild(title)
+            main.appendChild(card);
+          });
+        });
+    }
+  </script>
+</body>
+</html>
