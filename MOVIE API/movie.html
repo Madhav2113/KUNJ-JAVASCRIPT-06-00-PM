@@ -3,33 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Search App</title>
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        background-color: black;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #000000);
         color: white;
-      }
-      #data {
-        width: 300px;
-        margin-top: 10px;x
-        margin-left: 600px;
-        height: 50px;
-        box-shadow: rgba(250, 246, 246, 0.56) 0px 22px 150px 4px;
-      }
-      .container {
+        min-height: 100vh;
         display: flex;
-        flex-wrap: wrap;
-        gap: 80px;
-        margin-top: 50px;
+        flex-direction: column;
+        align-items: center;
       }
-      .movie {
-        width: 300px;
+
+      #data {
+        width: 400px;
+        margin-top: 40px;
+        padding: 12px 18px;
+        border-radius: 25px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        background: #222;
+        color: #fff;
         text-align: center;
+        box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.3);
+        transition: 0.3s;
       }
+
+      #data:focus {
+        background: #333;
+        box-shadow: 0px 0px 25px rgba(0, 255, 150, 0.6);
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+        padding: 0 40px 60px;
+        width: 100%;
+        max-width: 1400px;
+      }
+
+      .movie {
+        background: #1c1c1c;
+        border-radius: 15px;
+        overflow: hidden;
+        text-align: center;
+        padding: 15px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.6);
+        transition: 0.3s ease-in-out;
+      }
+
+      .movie:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0px 10px 30px rgba(0, 255, 150, 0.5);
+      }
+
       .movie img {
         width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      .movie h3 {
+        margin-top: 12px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .movie h2 {
+        font-size: 14px;
+        font-weight: 400;
+        color: #00ff96;
+        margin: 5px 0;
+      }
+
+      .movie p {
+        font-size: 13px;
+        color: #bbb;
       }
     </style>
   </head>
@@ -37,7 +96,7 @@
     <input
       type="text"
       id="data"
-      placeholder="movie search kro ...."
+      placeholder=" Search for movies..."
       onkeyup="movie()"
     />
     <div class="container"></div>
@@ -52,29 +111,36 @@
         fetch(`https://www.omdbapi.com/?s=${data}&apikey=fe6834fa`)
           .then((t) => t.json())
           .then((d) => {
-            d.Search.forEach((element) => {
-              console.log(element);
-              let moviediv = document.createElement("div");
-              moviediv.className = "movie";
+            if (d.Search) {
+              d.Search.forEach((element) => {
+                let moviediv = document.createElement("div");
+                moviediv.className = "movie";
 
-              let img = document.createElement("img");
-              img.src = element.Poster;
+                let img = document.createElement("img");
+                img.src =
+                  element.Poster !== "N/A"
+                    ? element.Poster
+                    : "https://via.placeholder.com/250x350?text=No+Image";
 
-              let title = document.createElement("h3");
-              title.textContent = element.Title;
+                let title = document.createElement("h3");
+                title.textContent = element.Title;
 
-              let type = document.createElement("h2");
-              type.textContent = element.Type;
-              console.log(type);
-              let year = document.createElement("p");
-              year.textContent = element.Year;
+                let type = document.createElement("h2");
+                type.textContent = element.Type.toUpperCase();
 
-              moviediv.appendChild(img);
-              moviediv.appendChild(title);
-              moviediv.appendChild(type);
-              moviediv.appendChild(year);
-              main.appendChild(moviediv);
-            });
+                let year = document.createElement("p");
+                year.textContent = `Released: ${element.Year}`;
+
+                moviediv.appendChild(img);
+                moviediv.appendChild(title);
+                moviediv.appendChild(type);
+                moviediv.appendChild(year);
+                main.appendChild(moviediv);
+              });
+            } else {
+              main.innerHTML =
+                "<h2 style='color:gray;text-align:center;width:100%'>No movies found...</h2>";
+            }
           });
       }
     </script>
